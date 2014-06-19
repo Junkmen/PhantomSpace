@@ -25,6 +25,8 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	private Obstacle floor,floor2;
 	private Obstacle asteroid1;
 	private Obstacle asteroid2;
+	private MusicStreamer mStream;
+	private MenuWindow menuWindow;
 	
 	private int Score = 0;
 	
@@ -41,7 +43,8 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		myCamera.viewportWidth = 1024;
 		Gdx.input.setInputProcessor(this);
 		Gdx.input.setCatchBackKey(true);
-		
+		mStream = new MusicStreamer();
+		mStream.StreamMusic(Gdx.files.internal("mfx/soundtrack.mp3"),true,0.5f);
 		
 		touchHandle = new Vector3();
 		player = new Player();
@@ -50,8 +53,11 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		floor2 = new Obstacle();
 		asteroid1 = new Obstacle();
 		asteroid2 = new Obstacle();
+		menuWindow = new MenuWindow();
 		
-		 floorTex = new Texture("gfx/floor.png");
+		menuWindow.addLayer(new Texture("gfx/GameOverWindow.png"));
+		
+		floorTex = new Texture("gfx/floor.png");
 		floor.setTexture( floorTex);
 		floor.setX(0);
 		floor.setY(0);
@@ -103,6 +109,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		floorTex.dispose();
 		asteroid.dispose();
 		batch.dispose();
+		mStream.soundtrackMp3.dispose();
 		
 	}
 
@@ -175,9 +182,9 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			background.drawLayers(batch);
 			batch.draw(floor.texture,floor.X,floor.Y);
 			batch.draw(floor2.texture,floor2.X,floor2.Y);
+			batch.draw(player.texture, player.X, player.Y);
 			batch.draw(asteroid1.texture,asteroid1.X,asteroid1.Y);
 			batch.draw(asteroid2.texture,asteroid2.X,asteroid2.Y);			
-			batch.draw(player.texture, player.X, player.Y);
 			batch.end();
 	   }
 	   
