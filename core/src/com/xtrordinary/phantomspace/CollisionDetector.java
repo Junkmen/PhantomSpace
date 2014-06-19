@@ -14,10 +14,11 @@ public class CollisionDetector {
  *  playerBack = 
  */
 	
-	public void SetValues(Player player, Obstacle asteroid) 
+	public boolean SetValues(Player player, Obstacle asteroid) 
 	{
 		this.asteroid = asteroid;
 		this.player = player;
+		return true;
 	}
 	
 	public int GetDistanceFromPoint(int xCenterX,int xCenterY, int x, int y) {

@@ -140,7 +140,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		    	}
 	    	} else if (keycode == Keys.ESCAPE) {
 	    		Gdx.app.exit();
-	    	}
+	    	} 
 	        return false;
 	    }
 
@@ -157,8 +157,13 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	    	touchHandle.x = screenX;
 	    	touchHandle.y = screenY;
 	    	myCamera.unproject(touchHandle);
+	    	if (menuWindow.MENU_ACTIVE == 1) {
+	    		menuWindow.MENU_ACTIVE = 0;
+	    		player.X = 200;
+	    	}
 	    	if (player.Y < CAMERA_HEIGHT-(player.getHeight()/2)) {
 	    		player.addSpeed(550);
+	    		player.Y++;
 	    	}
 	        return true;
 	    }
@@ -248,7 +253,10 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			   asteroid2.active = false;
 			   Score ++;
 		   }
-		   RunDetection();
+		   if(RunDetection()) {
+			  menuWindow.MENU_ACTIVE = 1;
+		   }
+		   
 	   }
 	   
 	  public void GameLoop(float deltaTime){
@@ -267,19 +275,22 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		{
 			cDetect.SetValues(player, asteroid1);
 			asteroid1 = cDetect.CheckForEnviromentCollision();
-			if(player != cDetect.CheckForCollision()) 
-			{
-				player = cDetect.CheckForCollision();
+			if(player.X != cDetect.CheckForCollision().X) 
+			{	
+				//menuWindow.MENU_ACTIVE = 1;
+				//player = cDetect.CheckForCollision();
 				return true;
+			} else {
+				cDetect.SetValues(player, asteroid2);
+				asteroid2 = cDetect.CheckForEnviromentCollision();
+				if(player.X != cDetect.CheckForCollision().X) 
+				{
+					//menuWindow.MENU_ACTIVE = 1;
+					//player = cDetect.CheckForCollision();
+					return true;
+				} else
+				return false;
 			}
-			cDetect.SetValues(player, asteroid2);
-			asteroid2 = cDetect.CheckForEnviromentCollision();
-			if(player != cDetect.CheckForCollision()) 
-			{
-				player = cDetect.CheckForCollision();
-				return true;
-			}
-			return false;
 		}
 	  
 	 	
