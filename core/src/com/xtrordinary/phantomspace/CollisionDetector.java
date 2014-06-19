@@ -7,7 +7,7 @@ public class CollisionDetector {
 	private Obstacle asteroid;
 	private Player player;
 /*
- *  playerLeg = 67,82 	asteroidCenter = 64,64
+ *  playerLeg = 67,82 	asteroidCenter = 64,64 floor = 24;  top = 600;
  *  playerHand = 78,41
  *  playerHelmet = 48,1 
  *  playerShoulder 63,19
@@ -39,11 +39,13 @@ public class CollisionDetector {
 	
 	public Obstacle CheckForEnviromentCollision() 
 	{
-		if(asteroid.Y + asteroid.getHeight() > 580) 
+		if(asteroid.Y > 472 ) 
 		{
+			asteroid.Y = 471;
 			asteroid.direction *= -1; 
-		} else if(asteroid.Y < 50) 
+		} else if(asteroid.Y < 24) 
 		{
+			asteroid.Y = 25;
 			asteroid.direction *= -1;
 		}
 		return asteroid;

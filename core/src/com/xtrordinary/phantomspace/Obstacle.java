@@ -8,10 +8,12 @@ public class Obstacle {
 		int X;
 		int Y;
 		int Speed;
+		int speedY = 30;
 		int Rotation;
 		int Radius=58;
 		int direction=0;
 		boolean active = true;
+		
 		
 		public void setTexture(Texture pTexture) {
 			this.texture = pTexture;
@@ -38,8 +40,8 @@ public class Obstacle {
 		}
 		
 		public void reset(int ScreenWidth) {
-			X = ScreenWidth + getWidth()+MathUtils.random(0,250);
-			Y = MathUtils.random(0,600-getHeight());
+			X = ScreenWidth + getWidth() + MathUtils.random(0,250);
+			Y = MathUtils.random(0,600 - getHeight());
 			//TODO update function to match any ScreenHeight;
 			direction = MathUtils.random(-3,3);
 			this.active = true;

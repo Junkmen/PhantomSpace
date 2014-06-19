@@ -125,7 +125,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	    		return true;
 	    	} else if (keycode == Keys.SPACE) {
 	    		if (player.Y < CAMERA_HEIGHT-(player.getHeight()/2)) {
-		    		player.addSpeed(550);
+		    		player.addSpeed(400);
 		    	}
 	    	} else if (keycode == Keys.ESCAPE) {
 	    		Gdx.app.exit();
@@ -190,9 +190,9 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			   player.Y = floor.getHeight();
 			   player.nullSpeed();
 			   player.SpeedMultiplier = 0;
-		   } else if (player.Y + 84 > OUT_OF_SCREEN) {
+		   } else if (player.Y + 90 > OUT_OF_SCREEN) {
 			   player.nullSpeed();
-			   player.setY(OUT_OF_SCREEN - 85);
+			   player.setY(OUT_OF_SCREEN - 130);
 		   }
 		   speed = 200*deltaTime;
 		   speed = (int) speed;
@@ -206,18 +206,18 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		   asteroid1.Speed++;
 		   asteroid2.Speed++;
 		   asteroid1.X -= asteroid1.Speed*deltaTime*10;
-		   asteroid1.Y -= asteroid1.Speed*deltaTime*10*asteroid1.direction;
+		   asteroid1.Y -= asteroid1.speedY*deltaTime*10*asteroid1.direction;
 		   asteroid2.X -= asteroid2.Speed*deltaTime*10;
-		   asteroid2.Y -= asteroid2.Speed*deltaTime*10*asteroid2.direction;
+		   asteroid2.Y -= asteroid2.speedY*deltaTime*10*asteroid2.direction;
 		   
+		   RunDetection();
 		   
-		   
-		   if(asteroid1.X< -asteroid1.getWidth()) {
+		   if(asteroid1.X < -asteroid1.getWidth()) {
 			   asteroid1.setX(1000);
 			   asteroid1.Speed = 20;
 			   asteroid1.reset(CAMERA_WIDTH);
 		   }
-		   if(asteroid2.X< -asteroid2.getWidth())  {
+		   if(asteroid2.X < -asteroid2.getWidth())  {
 			   	asteroid2.setX(1000);
 			   	asteroid2.Speed = 20;
 			   	asteroid2.reset(CAMERA_WIDTH);
@@ -232,7 +232,6 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			   asteroid2.active = false;
 			   Score ++;
 		   }
-		   RunDetection();
 	   }
 	   
 	  public void GameLoop(float deltaTime){
