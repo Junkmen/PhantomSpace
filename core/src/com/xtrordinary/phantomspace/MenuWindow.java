@@ -2,6 +2,7 @@ package com.xtrordinary.phantomspace;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector3;
 
@@ -12,6 +13,8 @@ public class MenuWindow extends Background {
 	private int OPTIONS_ACTIVE = 0;
 	public int MENU_ACTIVE = 1;
 	MusicStreamer mStream;
+	BitmapFont highScoreFont = new BitmapFont();
+	HighScoreManager hsm = new HighScoreManager();
 	
 	public void swapLayers(int layer,int swap) {
 		container = backgroundLayers[layer];
@@ -33,7 +36,8 @@ public class MenuWindow extends Background {
 				} else if (loopUse != OPTIONS_LAYER) {
 					batch.draw(backgroundLayers[loopUse], this.X, this.Y);
 				}
-			}	
+			} 
+			highScoreFont.draw(batch,Integer.toString(hsm.HighScore),this.X+450, this.Y +330);
 		}
 	}
 	

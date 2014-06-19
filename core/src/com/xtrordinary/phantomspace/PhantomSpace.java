@@ -8,6 +8,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
@@ -29,6 +30,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	private MenuWindow menuWindow;
 	private Button pause;
 	private CollisionDetector cDetect = new CollisionDetector();
+	BitmapFont scoreFont;
 	
 	private int Score = 0;
 	
@@ -45,6 +47,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		myCamera.viewportWidth = 1024;
 		Gdx.input.setInputProcessor(this);
 		Gdx.input.setCatchBackKey(true);
+		scoreFont =  new BitmapFont();
 		
 		pause = new Button();
 		pause.setTexture(new Texture("gfx/PauseButton.png"));
@@ -210,6 +213,8 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			batch.draw(asteroid1.texture,asteroid1.X,asteroid1.Y);
 			batch.draw(asteroid2.texture,asteroid2.X,asteroid2.Y);	
 			menuWindow.drawLayers(batch);
+			scoreFont.setColor(0.0f, 0.0f, 1.0f, 1.0f);
+			scoreFont.draw(batch,"Score:"+Integer.toString(Score),60, 575);
 			batch.draw(pause.texture,pause.X,pause.Y);
 			batch.end();
 	   }
@@ -272,6 +277,11 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 
 		   if(RunDetection()) {
 			  menuWindow.MENU_ACTIVE = 1;
+			 if(Score > menuWindow.hsm.GetHighScore()) {
+				 menuWindow.hsm.UpdateHighScore(Score);
+				 menuWindow.hsm.HighScore = Score;
+			 }
+			  Score = 0;
 		   }
 		 
 	   }
