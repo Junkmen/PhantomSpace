@@ -9,7 +9,7 @@ public class Player {
 	Texture texture;
 	Texture animatedTextures[] = new Texture[5];
 	int numberOfTextures;
-	
+	int CurrentWalk = 1;
 	public int WALK_1 = 1,WALK_2=2,WALK_3=3,JUMP_1=4;
 	
 	public void nullSpeed() {
@@ -35,11 +35,16 @@ public class Player {
 	}
 	public void setDrawableTexture(int texture){
 		this.texture = animatedTextures[texture];
+		CurrentWalk = texture;
 	}
 	public int getWidth() {
 		return texture.getWidth();
 	}
 	public int getHeight() {
 		return texture.getHeight();
+	}
+	public void nextWalkAnimation() {
+		this.CurrentWalk++;
+		if (this.CurrentWalk > 2) this.CurrentWalk = 1;
 	}
 }

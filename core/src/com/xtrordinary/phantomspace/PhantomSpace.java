@@ -32,7 +32,9 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	private CollisionDetector cDetect = new CollisionDetector();
 	BitmapFont scoreFont;
 	
+	private int walk_cycle = 0;
 	private int Score = 0;
+	private float calc1;
 	
 	static final float WORLD_TO_BOX = 0.01f;
 	static final float BOX_TO_WORLD = 100f;
@@ -97,6 +99,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		
 		player.addTexture(  new Texture("gfx/Player.png") , player.WALK_1);
 		player.setDrawableTexture(player.WALK_1);
+		player.addTexture(new Texture("gfx/Player2.png"), player.WALK_2);
 		player.setX(200);
 		player.setY(50);
 		OUT_OF_SCREEN = CAMERA_HEIGHT+(player.getHeight()/2);
@@ -113,7 +116,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	@Override
 	public void dispose() {
 		player.texture.dispose();
-		for (int i = 0; i < player.numberOfTextures-1; i++) player.animatedTextures[i].dispose();
+		for (int i = 1; i < player.numberOfTextures-1; i++) player.animatedTextures[i].dispose();
 		for (int i = 0; i < background.Layers-1;i++) background.backgroundLayers[i].dispose();
 		floor.texture.dispose();
 		floor2.texture.dispose();	
@@ -210,6 +213,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			batch.draw(floor.texture,floor.X,floor.Y);
 			batch.draw(floor2.texture,floor2.X,floor2.Y);
 			batch.draw(player.texture, player.X, player.Y);
+			//batch.draw(player.animatedTextures[player.CurrentWalk], player.X, player.Y);
 			batch.draw(asteroid1.texture,asteroid1.X,asteroid1.Y);
 			batch.draw(asteroid2.texture,asteroid2.X,asteroid2.Y);	
 			menuWindow.drawLayers(batch);
@@ -221,6 +225,16 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	   
 	    public void updateWorld(float deltaTime) {
 		  
+	    		calc1 = Gdx.graphics.getFramesPerSecond();
+	    		calc1 /= 60;
+	    		if (calc1 == 0) calc1 = 1;
+	    		walk_cycle += 1/(calc1);
+			   if (walk_cycle >= 10) {
+				   player.nextWalkAnimation();
+				   player.setDrawableTexture(player.CurrentWalk);
+				   walk_cycle = 0;
+			   }
+	    	
 		   if (player.Y > floor.getHeight()) {
 			   player.Y += player.Speed * deltaTime;
 			   player.Speed -= 10+player.SpeedMultiplier;
@@ -274,6 +288,8 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			   asteroid2.active = false;
 			   Score ++;
 		   }
+		   
+		   
 
 		   if(RunDetection()) {
 			  menuWindow.MENU_ACTIVE = 1;
