@@ -53,10 +53,12 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		floor = new Obstacle();
 		floor2 = new Obstacle();
 		asteroid1 = new Obstacle();
-		asteroid2 = new Obstacle();
+		asteroid2 = new Obstacle();  
 		menuWindow = new MenuWindow();
 		
 		menuWindow.addLayer(new Texture("gfx/GameOverWindow.png"));
+		menuWindow.setX(256);
+		menuWindow.setY(120);
 		
 		floorTex = new Texture("gfx/floor.png");
 		floor.setTexture( floorTex);
@@ -111,6 +113,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		asteroid.dispose();
 		batch.dispose();
 		mStream.soundtrackMp3.dispose();
+		for (int i = 0; i < menuWindow.Layers-1;i++) menuWindow.backgroundLayers[i].dispose();
 		
 	}
 
@@ -185,19 +188,24 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			batch.draw(floor2.texture,floor2.X,floor2.Y);
 			batch.draw(player.texture, player.X, player.Y);
 			batch.draw(asteroid1.texture,asteroid1.X,asteroid1.Y);
-			batch.draw(asteroid2.texture,asteroid2.X,asteroid2.Y);			
+			batch.draw(asteroid2.texture,asteroid2.X,asteroid2.Y);	
+			menuWindow.drawLayers(batch);
 			batch.end();
 	   }
 	   
 	    public void updateWorld(float deltaTime) {
-		   player.Y += player.Speed * deltaTime;
-		   player.Speed -= 10+player.SpeedMultiplier;
-		   player.SpeedMultiplier = player.SpeedMultiplier+2;
-		   if (player.Y < floor.getHeight()) {
+		  
+		   if (player.Y > floor.getHeight()) {
+			   player.Y += player.Speed * deltaTime;
+			   player.Speed -= 10+player.SpeedMultiplier;
+			   player.SpeedMultiplier = player.SpeedMultiplier+2;
+			  
+		   } else {
 			   player.Y = floor.getHeight();
 			   player.nullSpeed();
 			   player.SpeedMultiplier = 0;
-		   } else if (player.Y + 84 > OUT_OF_SCREEN) {
+		   }
+		   if (player.Y + 84 > OUT_OF_SCREEN) {
 			   player.nullSpeed();
 			   player.setY(OUT_OF_SCREEN - 85);
 		   }
