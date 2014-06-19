@@ -8,7 +8,7 @@ public class MenuWindow extends Background {
 	Texture container;
 	private int OPTIONS_LAYER = 1; 
 	private int OPTIONS_ACTIVE = 0;
-	public int MENU_ACTIVE = 1;
+	public int MENU_ACTIVE = 0;
 	
 	public void swapLayers(int layer,int swap) {
 		container = backgroundLayers[layer];

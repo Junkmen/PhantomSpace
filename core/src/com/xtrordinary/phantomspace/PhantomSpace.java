@@ -45,7 +45,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		Gdx.input.setInputProcessor(this);
 		Gdx.input.setCatchBackKey(true);
 		mStream = new MusicStreamer();
-		mStream.StreamMusic(Gdx.files.internal("mfx/soundtrack.mp3"),true,0.5f);
+		mStream.StreamMusic(Gdx.files.internal("mfx/soundtrack.mp3"),true,0.0f);
 		
 		touchHandle = new Vector3();
 		player = new Player();
@@ -136,6 +136,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	    	} else if (keycode == Keys.SPACE) {
 	    		if (player.Y < CAMERA_HEIGHT-(player.getHeight()/2)) {
 		    		player.addSpeed(550);
+		    		player.Y++;
 		    	}
 	    	} else if (keycode == Keys.ESCAPE) {
 	    		Gdx.app.exit();
