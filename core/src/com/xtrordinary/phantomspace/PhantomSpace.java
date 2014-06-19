@@ -27,6 +27,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	private Obstacle asteroid2;
 	private MusicStreamer mStream;
 	private MenuWindow menuWindow;
+	private CollisionDetector cDetect = new CollisionDetector();
 	
 	private int Score = 0;
 	
@@ -196,9 +197,9 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			   player.Y = floor.getHeight();
 			   player.nullSpeed();
 			   player.SpeedMultiplier = 0;
-		   } else if (player.Y > OUT_OF_SCREEN) {
+		   } else if (player.Y + 84 > OUT_OF_SCREEN) {
 			   player.nullSpeed();
-			   player.setY(OUT_OF_SCREEN-1);
+			   player.setY(OUT_OF_SCREEN - 85);
 		   }
 		   speed = 200*deltaTime;
 		   speed = (int) speed;
@@ -238,6 +239,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			   asteroid2.active = false;
 			   Score ++;
 		   }
+		   RunDetection();
 	   }
 	   
 	  public void GameLoop(float deltaTime){
@@ -252,9 +254,29 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		   renderWorld();
 	   }
 
-	
+	    public boolean RunDetection()
+		{
+			cDetect.SetValues(player, asteroid1);
+			asteroid1 = cDetect.CheckForEnviromentCollision();
+			if(player != cDetect.CheckForCollision()) 
+			{
+				player = cDetect.CheckForCollision();
+				return true;
+			}
+			cDetect.SetValues(player, asteroid2);
+			asteroid2 = cDetect.CheckForEnviromentCollision();
+			if(player != cDetect.CheckForCollision()) 
+			{
+				player = cDetect.CheckForCollision();
+				return true;
+			}
+			return false;
+		}
+	  
 	 	
 	}
+
+
 
 
 

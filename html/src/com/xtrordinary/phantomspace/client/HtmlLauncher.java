@@ -1,9 +1,9 @@
-package com.xtrordinary.phantomspace.client;
+package com.Xtrordinary.PhantomSpace.client;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
 import com.badlogic.gdx.backends.gwt.GwtApplicationConfiguration;
-import com.xtrordinary.phantomspace.PhantomSpace;
+import com.Xtrordinary.PhantomSpace.PhantomSpace;
 
 public class HtmlLauncher extends GwtApplication {
 
