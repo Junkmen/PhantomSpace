@@ -278,22 +278,24 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		{
 			cDetect.SetValues(player, asteroid1);
 			asteroid1 = cDetect.CheckForEnviromentCollision();
-			if(player.X != cDetect.CheckForCollision().X) 
-			{	
+		//	if(player.X != cDetect.CheckForCollision().X) 
+		//	{	
 				//menuWindow.MENU_ACTIVE = 1;
 				//player = cDetect.CheckForCollision();
-				return true;
-			} else {
-				cDetect.SetValues(player, asteroid2);
-				asteroid2 = cDetect.CheckForEnviromentCollision();
-				if(player.X != cDetect.CheckForCollision().X) 
-				{
+		//	} 
+			cDetect.CheckForCollision();
+			cDetect.SetValues(player, asteroid2);
+			asteroid2 = cDetect.CheckForEnviromentCollision();
+			//if(player.X != cDetect.CheckForCollision().X) 
+			//{
 					//menuWindow.MENU_ACTIVE = 1;
 					//player = cDetect.CheckForCollision();
-					return true;
-				} else
-				return false;
-			}
+			cDetect.CheckForCollision();
+			if (player.X == -200)
+			return true;
+	//		} 
+			return false;
+			
 		}
 	  
 	 	
