@@ -1,6 +1,7 @@
 package com.xtrordinary.phantomspace;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -37,6 +38,7 @@ public class MenuWindow extends Background {
 					batch.draw(backgroundLayers[loopUse], this.X, this.Y);
 				}
 			} 
+			highScoreFont.setColor(Color.BLACK);
 			highScoreFont.draw(batch,Integer.toString(hsm.HighScore),this.X+450, this.Y +330);
 		}
 	}
