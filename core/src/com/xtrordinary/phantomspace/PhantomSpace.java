@@ -27,6 +27,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	private Obstacle asteroid2;
 	private MusicStreamer mStream;
 	private MenuWindow menuWindow;
+	private Button pause;
 	private CollisionDetector cDetect = new CollisionDetector();
 	
 	private int Score = 0;
@@ -44,8 +45,11 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		myCamera.viewportWidth = 1024;
 		Gdx.input.setInputProcessor(this);
 		Gdx.input.setCatchBackKey(true);
-		mStream = new MusicStreamer();
-		mStream.StreamMusic(Gdx.files.internal("mfx/soundtrack.mp3"),true,0.0f);
+		
+		pause = new Button();
+		pause.setTexture(new Texture("gfx/PauseButton.png"));
+		pause.setX(10);
+		pause.setY(560);
 		
 		touchHandle = new Vector3();
 		player = new Player();
@@ -55,10 +59,11 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		asteroid1 = new Obstacle();
 		asteroid2 = new Obstacle();  
 		menuWindow = new MenuWindow();
-		
+		mStream = new MusicStreamer();
 		menuWindow.addLayer(new Texture("gfx/GameOverWindow.png"));
 		menuWindow.setX(256);
 		menuWindow.setY(120);
+		menuWindow.setMusicStreamer(mStream); 
 		
 		floorTex = new Texture("gfx/floor.png");
 		floor.setTexture( floorTex);
@@ -111,8 +116,9 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		floor2.texture.dispose();	
 		floorTex.dispose();
 		asteroid.dispose();
+		pause.texture.dispose();
 		batch.dispose();
-		mStream.soundtrackMp3.dispose();
+		menuWindow.mStream.soundtrackMp3.dispose();
 		for (int i = 0; i < menuWindow.Layers-1;i++) menuWindow.backgroundLayers[i].dispose();
 		
 	}
@@ -158,9 +164,16 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	    	touchHandle.x = screenX;
 	    	touchHandle.y = screenY;
 	    	myCamera.unproject(touchHandle);
+	    	
 	    	if (menuWindow.MENU_ACTIVE == 1) {
-	    		menuWindow.MENU_ACTIVE = 0;
-	    		player.X = 200;
+	    		if (menuWindow.CheckCoordinates(touchHandle, player)) {
+	    			pause.GAME_PAUSED = false;
+	    		}
+	    		return true;
+		    }
+	    	if (touchHandle.x < 50 && touchHandle.y > 550) {
+	    		pause.onTouch();
+	    		menuWindow.MENU_ACTIVE = 1;
 	    	}
 	    	if (player.Y < CAMERA_HEIGHT-(player.getHeight()/2)) {
 	    		player.addSpeed(550);
@@ -197,6 +210,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			batch.draw(asteroid1.texture,asteroid1.X,asteroid1.Y);
 			batch.draw(asteroid2.texture,asteroid2.X,asteroid2.Y);	
 			menuWindow.drawLayers(batch);
+			batch.draw(pause.texture,pause.X,pause.Y);
 			batch.end();
 	   }
 	   
@@ -263,7 +277,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	   }
 	   
 	  public void GameLoop(float deltaTime){
-		   updateWorld(deltaTime);
+		  if(!pause.GAME_PAUSED) updateWorld(deltaTime);
 		/*  Array<Body> bodies = new Array<Body>();
 		  world.getBodies(bodies);
 		  Vector2 playerPos = bodies.get(2).getPosition();
