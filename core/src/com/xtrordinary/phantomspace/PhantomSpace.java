@@ -5,6 +5,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,7 +36,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	private int walk_cycle = 0;
 	private int Score = 0;
 	private float calc1;
-	
+	private int ReturnResult;
 	static final float WORLD_TO_BOX = 0.01f;
 	static final float BOX_TO_WORLD = 100f;
 	
@@ -65,7 +66,14 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		asteroid2 = new Obstacle();  
 		menuWindow = new MenuWindow();
 		mStream = new MusicStreamer();
+		
+		
 		menuWindow.addLayer(new Texture("gfx/GameOverWindow.png"));
+		menuWindow.addLayer(new Texture("gfx/PlayButtonPress.png"));
+		menuWindow.addLayer(new Texture("gfx/ExitButtonPress.png"));
+		menuWindow.addLayer(new Texture("gfx/SoundMuted.png"));
+		menuWindow.addLayer(new Texture("gfx/ResumeButton.png"));
+		menuWindow.addLayer(new Texture("gfx/ResumeButtonPress.png"));
 		menuWindow.setX(256);
 		menuWindow.setY(120);
 		menuWindow.setMusicStreamer(mStream); 
@@ -100,7 +108,7 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 		player.addTexture(  new Texture("gfx/Player.png") , player.WALK_1);
 		player.setDrawableTexture(player.WALK_1);
 		player.addTexture(new Texture("gfx/Player2.png"), player.WALK_2);
-		player.setX(200);
+		player.setX(-200);
 		player.setY(50);
 		OUT_OF_SCREEN = CAMERA_HEIGHT+(player.getHeight()/2);
 		
@@ -115,17 +123,17 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	
 	@Override
 	public void dispose() {
-		player.texture.dispose();
-		for (int i = 1; i < player.numberOfTextures-1; i++) player.animatedTextures[i].dispose();
-		for (int i = 0; i < background.Layers-1;i++) background.backgroundLayers[i].dispose();
-		floor.texture.dispose();
-		floor2.texture.dispose();	
-		floorTex.dispose();
-		asteroid.dispose();
-		pause.texture.dispose();
-		batch.dispose();
-		menuWindow.mStream.soundtrackMp3.dispose();
-		for (int i = 0; i < menuWindow.Layers-1;i++) menuWindow.backgroundLayers[i].dispose();
+		if (player.texture != null)	player.texture.dispose();
+		for (int i = 1; i < player.numberOfTextures-1; i++) if(player.animatedTextures[i] != null) player.animatedTextures[i].dispose();
+		for (int i = 0; i < background.Layers-1;i++) if (player.animatedTextures[i] != null) background.backgroundLayers[i].dispose();
+		if(floor.texture != null) floor.texture.dispose();
+		if(floor2.texture != null) floor2.texture.dispose();	
+		if (floorTex != null) floorTex.dispose();
+		if (asteroid != null) asteroid.dispose();
+		if (pause.texture != null) pause.texture.dispose();
+		if (batch != null) batch.dispose();
+		if (menuWindow.mStream.soundtrackMp3 != null) menuWindow.mStream.soundtrackMp3.dispose();
+		for (int i = 0; i < menuWindow.Layers-1;i++) if (menuWindow.backgroundLayers[i] != null) menuWindow.backgroundLayers[i].dispose();
 		
 	}
 
@@ -172,23 +180,41 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 	    	myCamera.unproject(touchHandle);
 	    	
 	    	if (menuWindow.MENU_ACTIVE == 1) {
-	    		if (menuWindow.CheckCoordinates(touchHandle, player)) {
-	    			pause.GAME_PAUSED = false;
+	    		ReturnResult = menuWindow.CheckCoordinates(touchHandle, player,false);
+	    		if (ReturnResult == 1) {
+	    		
+	    		} else if (ReturnResult ==2) {
 	    		}
 	    		return true;
 		    }
 	    	if (touchHandle.x < 50 && touchHandle.y > 550) {
 	    		pause.onTouch();
 	    		menuWindow.MENU_ACTIVE = 1;
+	    		menuWindow.ActiveLayers[4] = true;
 	    	}
 	    	if (player.Y < CAMERA_HEIGHT-(player.getHeight()/2)) {
 	    		player.addSpeed(550);
 	    		player.Y++;
-	    	}
+	    	} 
 	        return true;
 	    }
 	    @Override
-	    public boolean touchUp(int screenX, int screenY, int pointer, int button) {	        
+	    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+	    	touchHandle.x = screenX;
+	    	touchHandle.y = screenY;
+	    	myCamera.unproject(touchHandle);
+	    	
+	    	if (menuWindow.MENU_ACTIVE == 1) {
+	    		ReturnResult = menuWindow.CheckCoordinates(touchHandle, player,true);
+	    		if (ReturnResult == 1) {
+	    			pause.GAME_PAUSED = false;
+	    			asteroid1.reset(CAMERA_WIDTH);
+	    			asteroid2.reset(CAMERA_WIDTH);
+	    		} else if (ReturnResult ==2) {
+	    			pause.GAME_PAUSED = false;
+	    		}
+	    		return true;
+		    }
 	        return true;
 	    }
 	    @Override
@@ -212,13 +238,13 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			background.drawLayers(batch);
 			batch.draw(floor.texture,floor.X,floor.Y);
 			batch.draw(floor2.texture,floor2.X,floor2.Y);
-			batch.draw(player.texture, player.X, player.Y);
+			batch.draw(player.animatedTextures[player.DrawableTexture], player.X, player.Y);
 			//batch.draw(player.animatedTextures[player.CurrentWalk], player.X, player.Y);
 			batch.draw(asteroid1.texture,asteroid1.X,asteroid1.Y);
 			batch.draw(asteroid2.texture,asteroid2.X,asteroid2.Y);	
 			menuWindow.drawLayers(batch);
-			scoreFont.setColor(0.0f, 0.0f, 1.0f, 1.0f);
-			scoreFont.draw(batch,"Score:"+Integer.toString(Score),60, 575);
+			scoreFont.setColor(Color.WHITE);
+			scoreFont.draw(batch,"Score:"+Integer.toString(Score),60, 585);
 			batch.draw(pause.texture,pause.X,pause.Y);
 			batch.end();
 	   }
@@ -289,7 +315,6 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 			   Score ++;
 		   }
 		   
-		   
 
 		   if(RunDetection()) {
 			  menuWindow.MENU_ACTIVE = 1;
@@ -331,6 +356,11 @@ public class PhantomSpace extends ApplicationAdapter implements InputProcessor {
 					//menuWindow.MENU_ACTIVE = 1;
 					//player = cDetect.CheckForCollision();
 			cDetect.CheckForCollision();
+			cDetect.SetAsteroidValues(asteroid1, asteroid2);
+			if(cDetect.CheckForAsteroidCollision()) {
+				//asteroid1.speedY -= 30;
+				asteroid1.direction *= -1;
+			}
 			if (player.X == -200)
 			return true;
 	//		} 

@@ -7,11 +7,11 @@ public class Background {
 	
 	int X;
 	int Y;
-	Texture backgroundLayers[] = new Texture[3];
-	int Layers=0,loopUse;
+	Texture backgroundLayers[] = new Texture[6]; //Texture container.
+	int Layers=0,loopUse; // loopUse = pre initialized variable for loop uses.Garbage collector optimization.
 	
 	public int getLayers(){
-		return Layers;
+		return Layers; // Returns the number of added layers.
 	}
 	public void setX(int x){
 		this.X = x;
@@ -25,7 +25,7 @@ public class Background {
 		}	
 	}
 	public void addLayer(Texture texture) {
-		if (Layers < 3) {
+		if (Layers < backgroundLayers.length) { 
 			this.backgroundLayers[this.Layers] = texture;
 			this.Layers++;
 		}

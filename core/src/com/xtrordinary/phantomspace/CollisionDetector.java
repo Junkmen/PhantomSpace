@@ -6,6 +6,7 @@ public class CollisionDetector {
 	int result; //for GetDistanceFromPoint()
 	private Obstacle asteroid;
 	private Player player;
+	private Obstacle asteroid2;
 /*
  *  playerLeg = 67,82 	asteroidCenter = 64,64 floor = 24;  top = 600;
  *  playerHand = 78,41
@@ -13,6 +14,22 @@ public class CollisionDetector {
  *  playerShoulder 63,19
  *  playerBack = 
  */
+	public void SetAsteroidValues(Obstacle asteroid,Obstacle asteroid2) {
+		this.asteroid = asteroid;
+		this.asteroid2 = asteroid2;
+	}
+	
+	public boolean CheckForAsteroidCollision() {
+		if (GetDistanceFromPoint(asteroid.X+62,asteroid.Y+62,asteroid2.X+62,asteroid2.Y+62) < 126) {
+			asteroid.direction *= -1;
+			asteroid2.direction *= -1;
+			//asteroid.speedY = -20;
+			return true;
+		}
+		//asteroid.direction *= -1;
+		return false;
+	}
+	
 	
 	public boolean SetValues(Player player, Obstacle asteroid) 
 	{
